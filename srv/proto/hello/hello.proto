@@ -4,6 +4,7 @@ package go.micro.srv.greeter;
 
 service Say {
 	rpc Hello(Request) returns (Response) {}
+	rpc Broken(Request) returns (Response) {}
 }
 
 message Request {

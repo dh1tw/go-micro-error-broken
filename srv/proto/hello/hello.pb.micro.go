@@ -43,6 +43,7 @@ func NewSayEndpoints() []*api.Endpoint {
 
 type SayService interface {
 	Hello(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	Broken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 }
 
 type sayService struct {
@@ -67,15 +68,27 @@ func (c *sayService) Hello(ctx context.Context, in *Request, opts ...client.Call
 	return out, nil
 }
 
+func (c *sayService) Broken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Say.Broken", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Say service
 
 type SayHandler interface {
 	Hello(context.Context, *Request, *Response) error
+	Broken(context.Context, *Request, *Response) error
 }
 
 func RegisterSayHandler(s server.Server, hdlr SayHandler, opts ...server.HandlerOption) error {
 	type say interface {
 		Hello(ctx context.Context, in *Request, out *Response) error
+		Broken(ctx context.Context, in *Request, out *Response) error
 	}
 	type Say struct {
 		say
@@ -90,4 +103,8 @@ type sayHandler struct {
 
 func (h *sayHandler) Hello(ctx context.Context, in *Request, out *Response) error {
 	return h.SayHandler.Hello(ctx, in, out)
+}
+
+func (h *sayHandler) Broken(ctx context.Context, in *Request, out *Response) error {
+	return h.SayHandler.Broken(ctx, in, out)
 }
