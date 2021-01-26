@@ -1,64 +1,87 @@
 # Greeter
 
-An example Greeter application
+An example Greeter application to demonstrate that [go-micro pull request #394](https://github.com/asim/go-micro/pull/396)
+broke the error behaviour of go-micro when using transport plugins (at least the [nats transport plugin](https://github.com/asim/go-micro/tree/master/plugins/transport/nats)).
 
-## Contents
+This demo application is based on the original [Greeter example](https://github.com/asim/go-micro/tree/master/examples/greeter)
+supplied with go-micro.
 
-- **srv** - an RPC greeter service
-- **cli** - an RPC client that calls the service once
-- **api** - examples of RPC API and RESTful API
-- **web** - how to use go-web to write web services
+The major difference are:
+- using NATS as Transport, Broker, Plugin
+- extended the `Say` Service by one method called `Broken` (which demonstrates the bug)
+- Server / Client / Service are invoked explicitely instead of the MICRO_* environment variables (I have to use non-standard nats-options)
+- The `svr` and `cli` are both indiviual go modules (and must therefore be executed directly from their module directory)
+
+```protobuf
+service Say {
+	rpc Hello(Request) returns (Response) {}
+	rpc Broken(Request) returns (Response) {}
+}
+```
+
+In `srv/main.go` the two handlers are implemented:
+
+```go
+func (s *Say) Hello(ctx context.Context, req *hello.Request, rsp *hello.Response) error {
+	log.Log("Received Say.Hello request")
+	rsp.Msg = "Hello " + req.Name
+	return nil
+}
+
+func (s *Say) Broken(ctx context.Context, req *hello.Request, rsp *hello.Response) error {
+	return errors.New("simulating an error")
+}
+```
+
+The `Broken` handler just throws an error. The error message should be propagated to the client. However, it
+never gets sent on the socket. Therefore the client will always just time out.
 
 ## Run Service
 
 Start go.micro.srv.greeter
 ```shell
-go run srv/main.go
+cd $GOPATH/src/github.com/dh1tw/natsgreeter/srv
+go run main.go
 ```
 
 ## Client
 
 Call go.micro.srv.greeter via client
 ```shell
+cd $GOPATH/src/github.com/dh1tw/natsgreeter/cli
+go run main.go
+```
+
+## What the client returns
+```shell
+Hello John
+{"id":"go.micro.client","code":408,"detail":"call timeout: context deadline exceeded","status":"Request Timeout"}
+```
+## Expected output
+```shell
+Hello John
+{"id":"go.micro.client","code":500,"detail":"simulating an error","status":"Error"} // or something similar
+```
+
+## Likely source of the problem
+
+in [PR #394](https://github.com/asim/go-micro/pull/396/files), the [func (s *service) call(...) method](https://github.com/asim/go-micro/blob/bba3107ae13fb9ce9e273106c4543c5c50a460bc/server/rpc_router.go#L202) in `rpc_router.go` was modified. Basically if the
+executed handler function results in an error, the code never has the change to reach the `router.sendResponse()` method.
+I presume that therefore the error message never gets returned, and hence the client runs into the time-out.
+
+Click [here for the lines in question](https://github.com/asim/go-micro/blob/bba3107ae13fb9ce9e273106c4543c5c50a460bc/server/rpc_router.go#L239-L245).
+
+## How to run the Service
+
+Start go.micro.srv.greeter
+```shell
+go run srv/main.go
+```
+
+## How to run the Client
+
+Call go.micro.srv.greeter via client
+```shell
 go run cli/main.go
 ```
 
-Examples of client usage via other languages can be found in the client directory.
-
-## API
-
-HTTP based requests can be made via the micro API. Micro logically separates API services from backend services. By default the micro API 
-accepts HTTP requests and converts to *api.Request and *api.Response types. Find them here [micro/api/proto](https://github.com/micro/micro/tree/master/api/proto).
-
-Run the go.micro.api.greeter API Service
-```shell
-go run api/api.go 
-```
-
-Run the micro API
-```shell
-micro api --handler=api
-```
-
-Call go.micro.api.greeter via API
-```shell
-curl http://localhost:8080/greeter/say/hello?name=John
-```
-
-Examples of other API handlers can be found in the API directory.
-
-## Web
-
-The micro web is a web dashboard and reverse proxy to run web apps as microservices.
-
-Run go.micro.web.greeter
-```
-go run web/web.go 
-```
-
-Run the micro web
-```shell
-micro web
-```
-
-Browse to http://localhost:8082/greeter
