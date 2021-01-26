@@ -36,15 +36,15 @@ func (s *Say) Broken(ctx context.Context, req *hello.Request, rsp *hello.Respons
 The `Broken` handler just throws an error. The error message should be propagated to the client. However, it
 never gets sent on the socket. Therefore the client will always just time out.
 
-## Run Service
+## Run Service & Client
+
+assuming you cloned this repo into your GOPATH, run:
 
 Start go.micro.srv.greeter
 ```shell
 cd $GOPATH/src/github.com/dh1tw/natsgreeter/srv
 go run main.go
 ```
-
-## Client
 
 Call go.micro.srv.greeter via client
 ```shell
@@ -70,18 +70,3 @@ executed handler function results in an error, the code never has the change to 
 I presume that therefore the error message never gets returned, and hence the client runs into the time-out.
 
 Click [here for the lines in question](https://github.com/asim/go-micro/blob/bba3107ae13fb9ce9e273106c4543c5c50a460bc/server/rpc_router.go#L239-L245).
-
-## How to run the Service
-
-Start go.micro.srv.greeter
-```shell
-go run srv/main.go
-```
-
-## How to run the Client
-
-Call go.micro.srv.greeter via client
-```shell
-go run cli/main.go
-```
-
