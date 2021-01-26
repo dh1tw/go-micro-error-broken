@@ -1,7 +1,7 @@
 # Greeter
 
 An example Greeter application to demonstrate that [go-micro pull request #394](https://github.com/asim/go-micro/pull/396)
-broke the error behaviour of go-micro when using transport plugins (at least the [nats transport plugin](https://github.com/asim/go-micro/tree/master/plugins/transport/nats)).
+likely broke the error behaviour of go-micro rpc calls when using transport plugins (at least the [nats transport plugin](https://github.com/asim/go-micro/tree/master/plugins/transport/nats)).
 
 This demo application is based on the original [Greeter example](https://github.com/asim/go-micro/tree/master/examples/greeter)
 supplied with go-micro.
