@@ -1,4 +1,4 @@
-module greeter/cli
+module github.com/dh1tw/natsgreeter/cli
 
 go 1.16
 

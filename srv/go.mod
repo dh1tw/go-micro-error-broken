@@ -1,4 +1,4 @@
-module greeter/srv
+module github.com/dh1tw/natsgreeter/srv
 
 go 1.16
 
