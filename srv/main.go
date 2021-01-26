@@ -5,7 +5,7 @@ import (
 	"context"
 	"errors"
 
-	hello "greeter/srv/proto/hello"
+	hello "github.com/dh1tw/natsgreeter/srv/proto/hello"
 
 	natsBroker "github.com/micro/go-micro/plugins/broker/nats/v2"
 	natsReg "github.com/micro/go-micro/plugins/registry/nats/v2"
