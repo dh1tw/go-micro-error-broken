@@ -31,8 +31,6 @@ func main() {
 		client.Registry(reg),
 		client.PoolSize(1),
 		client.PoolTTL(time.Hour*8760), // one year - don't TTL our connection
-		// client.Selector(regSelector.NewSelector()),
-		// client.Selector(static.NewSelector()),
 	)
 
 	service := micro.NewService(
