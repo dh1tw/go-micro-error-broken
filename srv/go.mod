@@ -2,7 +2,7 @@ module github.com/dh1tw/natsgreeter/srv
 
 go 1.16
 
-// replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
+replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
 	github.com/golang/protobuf v1.4.2
