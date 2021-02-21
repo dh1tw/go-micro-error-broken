@@ -1,15 +1,13 @@
 # Greeter
 
 An example Greeter application to demonstrate that [go-micro pull request #394](https://github.com/asim/go-micro/pull/396)
-likely broke the error behaviour of go-micro rpc calls when using transport plugins (at least the [nats transport plugin](https://github.com/asim/go-micro/tree/master/plugins/transport/nats)).
+likely broke the error behaviour of go-micro rpc calls.
 
 This demo application is based on the original [Greeter example](https://github.com/asim/go-micro/tree/master/examples/greeter)
 supplied with go-micro.
 
 The major difference are:
-- using NATS as Transport, Broker, Plugin
 - extended the `Say` Service by one method called `Broken` (which demonstrates the bug)
-- Server / Client / Service are invoked explicitely instead of the MICRO_* environment variables (I have to use non-standard nats-options)
 - The `svr` and `cli` are both indiviual go modules (and must therefore be executed directly from their module directory)
 
 ```protobuf
@@ -33,8 +31,8 @@ func (s *Say) Broken(ctx context.Context, req *hello.Request, rsp *hello.Respons
 }
 ```
 
-The `Broken` handler just throws an error. The error message should be propagated to the client. However, it
-never gets sent on the socket. Therefore the client will always just time out.
+The `Broken` handler just throws an error. The error message should be propagated to the client. However, it never
+gets sent on the socket. Therefore the client will always just time out.
 
 ## Run Service & Client
 
