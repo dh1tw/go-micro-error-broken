@@ -63,7 +63,7 @@ Hello John
 
 ## Likely source of the problem
 
-in [PR #394](https://github.com/asim/go-micro/pull/396/files), the [func (s *service) call(...) method](https://github.com/asim/go-micro/blob/bba3107ae13fb9ce9e273106c4543c5c50a460bc/server/rpc_router.go#L202) in `rpc_router.go` was modified. Basically if the
+in [PR #396](https://github.com/asim/go-micro/pull/396/files), the [func (s *service) call(...) method](https://github.com/asim/go-micro/blob/bba3107ae13fb9ce9e273106c4543c5c50a460bc/server/rpc_router.go#L202) in `rpc_router.go` was modified. Basically if the
 executed handler function results in an error, the code never has the change to reach the `router.sendResponse()` method.
 I presume that therefore the error message never gets returned, and hence the client runs into the time-out.
 
