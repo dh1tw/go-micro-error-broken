@@ -7,13 +7,13 @@ import (
 
 	hello "github.com/dh1tw/natsgreeter/srv/proto/hello"
 
-	natsBroker "github.com/micro/go-micro/plugins/broker/nats/v2"
-	natsReg "github.com/micro/go-micro/plugins/registry/nats/v2"
-	natsTr "github.com/micro/go-micro/plugins/transport/nats/v2"
+	natsBroker "github.com/asim/go-micro/plugins/broker/nats/v3"
+	natsReg "github.com/asim/go-micro/plugins/registry/nats/v3"
+	natsTr "github.com/asim/go-micro/plugins/transport/nats/v3"
 
-	micro "github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/server"
-	"github.com/micro/go-micro/v2/util/log"
+	micro "github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/server"
+	"github.com/asim/go-micro/v3/util/log"
 	nats "github.com/nats-io/nats.go"
 )
 
