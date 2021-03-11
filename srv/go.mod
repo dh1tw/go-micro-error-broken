@@ -6,6 +6,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
 	github.com/Microsoft/go-winio v0.4.16 // indirect
+	github.com/asim/go-micro/plugins/server/grpc/v3 v3.0.0-20210227064844-df90f2ca63ff
 	github.com/asim/go-micro/v3 v3.5.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
@@ -23,7 +24,7 @@ require (
 	golang.org/x/sys v0.0.0-20210220050731-9a76102bfb43 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	google.golang.org/genproto v0.0.0-20210219173056-d891e3cb3b5b // indirect
-	google.golang.org/grpc v1.35.0
+	google.golang.org/grpc v1.35.0 // indirect
 	google.golang.org/protobuf v1.25.0
 
 )

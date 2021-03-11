@@ -4,10 +4,10 @@ go 1.16
 
 require (
 	github.com/Microsoft/go-winio v0.4.16 // indirect
+	github.com/asim/go-micro/plugins/client/grpc/v3 v3.0.0-20210227064844-df90f2ca63ff
 	github.com/asim/go-micro/v3 v3.5.0
 	github.com/dh1tw/natsgreeter/srv v0.0.0-20210221224142-9d3747b790c9
 	github.com/go-git/go-git/v5 v5.2.0 // indirect
-	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect

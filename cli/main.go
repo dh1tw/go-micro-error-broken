@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	hello "github.com/dh1tw/natsgreeter/srv/proto/hello"
-
+	grpc "github.com/asim/go-micro/plugins/client/grpc/v3"
 	micro "github.com/asim/go-micro/v3"
+	hello "github.com/dh1tw/natsgreeter/srv/proto/hello"
 )
 
 func main() {
 
-	service := micro.NewService()
+	service := micro.NewService(
+		micro.Client(grpc.NewClient()),
+	)
 
 	service.Init()
 
