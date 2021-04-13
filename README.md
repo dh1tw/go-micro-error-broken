@@ -1,3 +1,33 @@
+# Update 
+
+The problem has been solved. You have to instanciate your client with the Option ContentType "application/proto-rpc".
+This will propagate the error from the server correctly to the client. 
+
+
+```golang
+
+    c := client.NewClient(
+		client.PoolSize(1), // some custom options
+		client.ContentType("application/proto-rpc"), // <<-----
+	)
+
+```
+
+See the full explanation in issue [go-micro/2110](https://github.com/asim/go-micro/issues/2110)
+
+## Description
+
+ I did some further digging in the git history and the Github issues. I found a few more clues that explain IMHO the current behavior: 
+- As part of PR go-micro/#362 @asim introduced the [proto codec](https://github.com/asim/go-micro/tree/master/codec/proto). Apparently with the aim to allow go-micro to process standard json, protobuf and grpc requests. In this PR he changed the codec for ContentType `application/protobuf` from `protorpc.NewCodec` to `proto.NewCodec`. This didn't cause any problems, since the defaultContentType was `application/octet-stream` and still set to `protorpc.NewCodec`. 
+- In PR go-micro/#372 the `DefaultContentType` was changed from `"application/octet-stream"` to `"application/protobuf"`. And from then onwards, `proto.Codec` was the default Codec.
+
+Git blame revealed that the `func (c *Codec) Write (m *Codec.Message...)` in the `proto.Codec` actually always ignored the `m *codec.Message`. So I suppose that @asim did this on purpose and that the `proto.Codec` was never supposed to return an error to the client. A short confirmation from @asim would be very much appreciated. 
+
+So if you want to propagate error messages from the server to the client, you have to use the `protorpc` codec.
+
+One way to do so is by setting the contentType Option when calling `client.NewClient()`.  
+
+
 # Greeter
 
 An example Greeter application to demonstrate that [go-micro pull request #394](https://github.com/asim/go-micro/pull/396)
