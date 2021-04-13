@@ -7,11 +7,18 @@ import (
 	hello "github.com/dh1tw/natsgreeter/srv/proto/hello"
 
 	micro "github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/client"
 )
 
 func main() {
 
-	service := micro.NewService()
+	c := client.NewClient(
+		client.ContentType("application/proto-rpc"),
+	)
+
+	service := micro.NewService(
+		micro.Client(c),
+	)
 
 	service.Init()
 
