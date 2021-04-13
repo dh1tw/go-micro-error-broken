@@ -1,3 +1,4 @@
+## THIS DEMO CODE USES NATS
 # Update 
 
 The problem has been solved. You have to instanciate your client with the Option ContentType "application/proto-rpc".
@@ -17,7 +18,7 @@ See the full explanation in issue [go-micro/2110](https://github.com/asim/go-mic
 
 ## Description
 
- I did some further digging in the git history and the Github issues. I found a few more clues that explain IMHO the current behavior: 
+I did some further digging in the git history and the Github issues. I found a few more clues that explain IMHO the current behavior: 
 - As part of PR go-micro/#362 @asim introduced the [proto codec](https://github.com/asim/go-micro/tree/master/codec/proto). Apparently with the aim to allow go-micro to process standard json, protobuf and grpc requests. In this PR he changed the codec for ContentType `application/protobuf` from `protorpc.NewCodec` to `proto.NewCodec`. This didn't cause any problems, since the defaultContentType was `application/octet-stream` and still set to `protorpc.NewCodec`. 
 - In PR go-micro/#372 the `DefaultContentType` was changed from `"application/octet-stream"` to `"application/protobuf"`. And from then onwards, `proto.Codec` was the default Codec.
 
